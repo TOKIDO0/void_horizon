@@ -32,7 +32,7 @@ export default async function handler(req: Request) {
         messages: [
           {
             role: 'system',
-            content: 'You are Void Horizon AI Support, a helpful assistant for a web design studio. You help clients with questions about web development, AI solutions, and design services. Be professional, concise, and helpful. Respond in the same language the user uses.'
+            content: 'You are Void Horizon AI Support. Respond in the same language the user uses. Style rules: do NOT use markdown emphasis like * or **. Use short sentences with proper punctuation. Use clear structure with line breaks. Preferred format: 1) Key point; 2) Next step; 3) Optional notes. Keep it concise and professional.'
           },
           ...messages
         ],
@@ -51,7 +51,8 @@ export default async function handler(req: Request) {
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || 'Sorry, I could not process your request.';
+    const rawContent = data.choices?.[0]?.message?.content || 'Sorry, I could not process your request.';
+    const content = String(rawContent).replace(/\*/g, '');
 
     return new Response(JSON.stringify({ content }), {
       status: 200,

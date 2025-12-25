@@ -262,7 +262,7 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ year, title, summary, desc, m
     <div 
       onMouseEnter={() => sounds.playFeedback('hover')}
       style={{ willChange: isActive ? 'auto' : 'transform, opacity' }}
-      className={`group min-w-[440px] h-[550px] flex flex-col justify-end p-12 border border-white/5 bg-black/30 backdrop-blur-2xl rounded-[2.5rem] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] transform relative overflow-hidden ${isActive ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-32 opacity-0 scale-95'} hover:bg-black/20 hover:border-[#bfff00]/20`}
+      className={`group min-w-[280px] sm:min-w-[360px] lg:min-w-[440px] h-[420px] sm:h-[500px] lg:h-[550px] flex flex-col justify-end p-6 sm:p-10 lg:p-12 border border-white/5 bg-black/30 backdrop-blur-2xl rounded-[2rem] sm:rounded-[2.5rem] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] transform relative overflow-hidden ${isActive ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-24 sm:translate-y-32 opacity-0 scale-95'} hover:bg-black/20 hover:border-[#bfff00]/20`}
     >
       {media && (
         <>
@@ -279,22 +279,22 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ year, title, summary, desc, m
           <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/30 to-black/60 pointer-events-none"></div>
         </>
       )}
-      <div className="absolute top-12 left-12 transition-transform duration-700 group-hover:-translate-y-4 group-hover:-translate-x-4">
-        <span className="font-syne text-[#bfff00] text-9xl opacity-20 select-none transition-opacity group-hover:opacity-40">{year}</span>
+      <div className="absolute top-6 left-6 sm:top-12 sm:left-12 transition-transform duration-700 group-hover:-translate-y-4 group-hover:-translate-x-4">
+        <span className="font-syne text-[#bfff00] text-6xl sm:text-8xl lg:text-9xl opacity-20 select-none transition-opacity group-hover:opacity-40">{year}</span>
       </div>
 
       <div className="relative z-10">
-        <h4 className="font-syne text-3xl text-white mb-6 uppercase tracking-tighter leading-none transition-transform duration-500 group-hover:-translate-y-2">
+        <h4 className="font-syne text-2xl sm:text-3xl text-white mb-4 sm:mb-6 uppercase tracking-tighter leading-none transition-transform duration-500 group-hover:-translate-y-2">
           {title}
         </h4>
         {summary && (
-          <p className="text-white/70 text-base mb-4 font-medium tracking-tight">
+          <p className="text-white/70 text-sm sm:text-base mb-3 sm:mb-4 font-medium tracking-tight">
             {summary}
           </p>
         )}
         
         <div className="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-out group-hover:max-h-40 group-hover:opacity-100 group-hover:mb-4">
-          <p className="text-white/60 leading-relaxed text-base font-medium border-l-2 border-[#bfff00]/30 pl-4 py-1">
+          <p className="text-white/60 leading-relaxed text-sm sm:text-base font-medium border-l-2 border-[#bfff00]/30 pl-4 py-1">
             {desc}
           </p>
         </div>
@@ -304,7 +304,7 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ year, title, summary, desc, m
         </div>
       </div>
 
-      <div className={`absolute -top-8 -right-8 w-40 h-40 bg-[#bfff00] text-black rounded-full flex items-center justify-center font-bold text-[11px] shadow-[0_20px_50px_rgba(191,255,0,0.3)] transition-all duration-700 delay-150 transform ${isActive ? 'scale-100 opacity-100 rotate-12' : 'scale-0 opacity-0 rotate-0'} group-hover:rotate-[32deg] group-hover:scale-110`}>
+      <div className={`absolute -top-6 -right-6 sm:-top-8 sm:-right-8 w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 bg-[#bfff00] text-black rounded-full flex items-center justify-center font-bold text-[10px] sm:text-[11px] shadow-[0_20px_50px_rgba(191,255,0,0.3)] transition-all duration-700 delay-150 transform ${isActive ? 'scale-100 opacity-100 rotate-12' : 'scale-0 opacity-0 rotate-0'} group-hover:rotate-[32deg] group-hover:scale-110`}>
         <span className="px-6 text-center leading-tight uppercase tracking-[0.2em]">VH-PROTO-{(index + 1).toString().padStart(2, '0')}</span>
       </div>
     </div>
@@ -313,7 +313,9 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ year, title, summary, desc, m
 
 const HorizontalHistory = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
+  const [maxTranslatePx, setMaxTranslatePx] = useState<number>(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -324,6 +326,18 @@ const HorizontalHistory = () => {
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const update = () => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const translate = Math.max(0, el.scrollWidth - el.clientWidth);
+      setMaxTranslatePx(translate);
+    };
+    update();
+    window.addEventListener('resize', update, { passive: true });
+    return () => window.removeEventListener('resize', update);
   }, []);
 
   const historyData = [
@@ -373,11 +387,11 @@ const HorizontalHistory = () => {
 
   return (
     <section ref={containerRef} className="h-[500vh] relative z-[50]">
-      <div className="sticky top-0 z-[60] h-screen w-full flex flex-col justify-start overflow-x-hidden bg-black border-t border-white/5 shadow-[0_-50px_100px_rgba(0,0,0,0.8)] pt-28 md:pt-32">
+      <div className="sticky top-20 sm:top-24 z-[60] h-[calc(100svh-5rem)] sm:h-[calc(100svh-6rem)] md:h-[calc(100vh-6rem)] w-full flex flex-col justify-start overflow-hidden overscroll-none bg-black border-t border-white/5 shadow-[0_-50px_100px_rgba(0,0,0,0.8)] touch-pan-y">
 
-        <div className="px-12 max-w-[1600px] mx-auto w-full mb-16 relative z-10 pt-0">
+        <div className="px-4 sm:px-8 lg:px-12 max-w-[1600px] mx-auto w-full mb-10 sm:mb-16 relative z-10 pt-0">
           <div className="flex items-end justify-between mb-4">
-            <h2 className="font-syne text-6xl md:text-9xl tracking-tighter bracket">
+            <h2 className="font-syne text-4xl sm:text-6xl md:text-9xl tracking-tighter bracket">
               COMPANY <span className="text-[#bfff00]">JOURNEY</span>
             </h2>
             <div className="hidden md:flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.6em] text-white/30 mb-4">
@@ -394,9 +408,10 @@ const HorizontalHistory = () => {
         </div>
         
         <div 
-          className="flex gap-20 pl-[100vw] pr-[50vw] py-20"
+          ref={scrollerRef}
+          className="flex gap-8 sm:gap-14 lg:gap-20 pl-[100vw] pr-[50vw] py-12 sm:py-16 lg:py-20"
           style={{ 
-            transform: `translate3d(${-scrollProgress * 380}vw, 0, 0)`,
+            transform: `translate3d(${-scrollProgress * maxTranslatePx}px, 0, 0)`,
             willChange: 'transform',
             transition: 'transform 0.1s ease-out'
           }}
@@ -485,10 +500,10 @@ const FloatingParticles = () => {
 const Navbar = () => (
   <nav 
     onClick={() => sounds.init()}
-    className="fixed top-0 left-0 w-full z-[100] px-6 py-8 flex justify-between items-center"
+    className="fixed top-0 left-0 w-full z-[100] px-4 sm:px-6 py-5 sm:py-8 flex justify-between items-center"
   >
     <div className="flex items-center gap-4 group cursor-pointer mix-blend-difference" onMouseEnter={() => sounds.playFeedback('hover')}>
-      <img src="/assets/logo/void_horizon.svg" alt="Void Horizon" className="h-10 group-hover:scale-110 transition-transform brightness-0 invert" />
+      <img src="/assets/logo/void_horizon.svg" alt="Void Horizon" className="h-8 sm:h-10 group-hover:scale-110 transition-transform brightness-0 invert" />
     </div>
     <div className="hidden md:flex gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-white">
       <a href="#works" className="mix-blend-difference hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Solutions</a>
@@ -511,14 +526,14 @@ const Ticker = () => {
   ];
 
   return (
-    <div className="w-full overflow-hidden border-y border-white/5 py-6 bg-[#bfff00] relative z-20">
+    <div className="w-full overflow-hidden border-y border-white/5 py-4 sm:py-6 bg-[#bfff00] relative z-20">
       <div className="flex whitespace-nowrap animate-ticker">
         {[...Array(3)].map((_, repeatIndex) => (
-          <div key={repeatIndex} className="flex items-center gap-16 px-8">
+          <div key={repeatIndex} className="flex items-center gap-10 sm:gap-16 px-6 sm:px-8">
             {brands.map((brand, i) => (
               <div key={`${repeatIndex}-${i}`} className="flex items-center justify-center">
                 {brand.type === 'img' ? (
-                  <img src={brand.src} alt={brand.alt} className={brand.size} />
+                  <img src={brand.src} alt={brand.alt} className="h-7 sm:h-8" />
                 ) : (
                   <span className="iconify" data-icon={brand.name} data-width={brand.size}></span>
                 )}
@@ -536,13 +551,13 @@ const AnimatedProjectTitle = ({ title, category, href = "#" }: { title: string, 
     href={href} 
     onMouseEnter={() => sounds.playFeedback('hover')}
     onClick={() => sounds.playFeedback('click')}
-    className="title-container relative flex items-stretch h-32 border-t border-white/5 group cursor-pointer overflow-hidden"
+    className="title-container relative flex items-stretch h-24 sm:h-28 md:h-32 border-t border-white/5 group cursor-pointer overflow-hidden"
   >
     <div className="title-fill-bg"></div>
-    <div className="relative z-10 flex-1 flex items-center px-8 transition-all duration-500 group-hover:translate-x-12">
+    <div className="relative z-10 flex-1 flex items-center px-4 sm:px-6 md:px-8 transition-all duration-500 group-hover:translate-x-6 sm:group-hover:translate-x-12">
       <div className="flex flex-col">
         <span className="text-[10px] uppercase font-bold tracking-widest text-white/30 group-hover:text-black/60 mb-2">{category}</span>
-        <h3 className="font-molgan text-3xl md:text-6xl leading-none">
+        <h3 className="font-molgan text-2xl sm:text-3xl md:text-6xl leading-none">
           <GlitchText text={title} />
         </h3>
       </div>
@@ -574,7 +589,7 @@ const Hero = () => {
   }, []);
   
   return (
-    <section className="relative min-h-screen flex flex-col justify-center px-6 overflow-hidden">
+    <section className="relative min-h-[100svh] md:min-h-screen flex flex-col justify-center px-4 sm:px-6 overflow-hidden pt-24 sm:pt-28">
       <video 
         ref={videoRef}
         autoPlay 
@@ -597,13 +612,13 @@ const Hero = () => {
         }}
       >
         <div className="mb-20">
-          <span className="bracket font-syne text-[#bfff00] text-sm uppercase tracking-widest block mb-6">
+          <span className="bracket font-syne text-[#bfff00] text-xs sm:text-sm uppercase tracking-widest block mb-5 sm:mb-6">
             CORPORATE VISION // CORE SYSTEMS
           </span>
-          <h1 className="font-hero text-6xl md:text-[12rem] leading-[0.8] text-white tracking-tighter mb-10">
+          <h1 className="font-hero text-5xl sm:text-6xl md:text-[12rem] leading-[0.82] md:leading-[0.8] text-white tracking-tighter mb-8 sm:mb-10">
             <GlitchText text="VOID" /><br /><GlitchText text="HORIZON" />
           </h1>
-          <p className="font-hero2 text-xl md:text-3xl text-white/40 max-w-2xl font-medium leading-tight">
+          <p className="font-hero2 text-base sm:text-xl md:text-3xl text-white/40 max-w-2xl font-medium leading-tight">
             We engineer <Highlight>fluid intelligence systems</Highlight> driven by technical precision and architectural agility to deliver business value.
           </p>
         </div>
@@ -737,7 +752,7 @@ const AIConcierge = () => {
         <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
           {messages.map((m, i) => (
             <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'} message-enter`}>
-              <div className={`text-xs p-4 rounded-xl leading-relaxed max-w-[85%] ${m.role === 'user' ? 'bg-[#bfff00]/10 text-[#bfff00] border border-[#bfff00]/20 rounded-br-none' : 'text-white/70 bg-white/5 rounded-bl-none border border-white/5'}`}>
+              <div className={`text-xs p-4 rounded-xl leading-relaxed max-w-[85%] whitespace-pre-wrap ${m.role === 'user' ? 'bg-[#bfff00]/10 text-[#bfff00] border border-[#bfff00]/20 rounded-br-none' : 'text-white/70 bg-white/5 rounded-bl-none border border-white/5'}`}>
                 {m.text}
               </div>
             </div>
@@ -794,6 +809,40 @@ const DottedOrbit = () => {
 
 const App = () => {
   const auraOffset = useParallax(0.08);
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactRequirement, setContactRequirement] = useState('');
+  const [toast, setToast] = useState<null | { type: 'success' | 'error' | 'warn'; message: string }>(null);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = window.setTimeout(() => setToast(null), 2600);
+    return () => window.clearTimeout(t);
+  }, [toast]);
+
+  const submitContact = async () => {
+    const missing: string[] = [];
+    if (!contactName.trim()) missing.push('姓名');
+    if (!contactEmail.trim()) missing.push('邮箱');
+    if (!contactRequirement.trim()) missing.push('需求');
+
+    if (missing.length > 0) {
+      setToast({ type: 'warn', message: `${missing.join('、')} 输入框里的内容没有填写哦！请补全后再发送。` });
+      return;
+    }
+
+    try {
+      sounds.playFeedback('click');
+      await new Promise((r) => setTimeout(r, 450));
+      setToast({ type: 'success', message: '您的需求已经发送了，我们很快就会联系您哦！' });
+      setContactName('');
+      setContactEmail('');
+      setContactRequirement('');
+    } catch (e) {
+      console.error(e);
+      setToast({ type: 'error', message: '很抱歉…似乎有什么错误，不过不是您的问题，我们很快就会解决的。' });
+    }
+  };
 
   return (
     <div className="relative selection:bg-[#bfff00] selection:text-black" onMouseMove={() => sounds.init()}>
@@ -801,13 +850,13 @@ const App = () => {
       <Hero />
       <Ticker />
       
-      <section id="works" className="py-40 relative bg-black">
+      <section id="works" className="py-24 sm:py-32 md:py-40 relative bg-black">
         <div className="absolute inset-0 z-0">
           <img src="/assets/images/core.png" alt="" className="w-full h-full object-cover opacity-50" />
         </div>
         <ScrollRevealSection>
           <div className="px-6 max-w-7xl mx-auto mb-20 relative z-10">
-            <h2 className="font-molgan text-5xl md:text-7xl mb-4 bracket">Core Business Domains</h2>
+            <h2 className="font-molgan text-3xl sm:text-5xl md:text-7xl mb-3 sm:mb-4 bracket">Core Business Domains</h2>
           </div>
         </ScrollRevealSection>
         <div className="border-b border-white/5 relative z-10">
@@ -817,17 +866,17 @@ const App = () => {
         </div>
       </section>
       
-      <section id="about" className="py-40 px-6 relative overflow-hidden bg-black z-10">
+      <section id="about" className="py-24 sm:py-32 md:py-40 px-4 sm:px-6 relative overflow-hidden bg-black z-10">
         <ScrollRevealSection>
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-20 relative z-10">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-10 sm:gap-16 md:gap-20 relative z-10">
             <div className="md:w-1/3">
-              <h2 className="font-syne text-5xl md:text-7xl leading-none bracket text-[#bfff00] animate-fade-in-blur">Ethos</h2>
+              <h2 className="font-syne text-4xl sm:text-5xl md:text-7xl leading-none bracket text-[#bfff00] animate-fade-in-blur">Ethos</h2>
             </div>
             <div className="md:w-2/3 space-y-12">
-              <p className="font-syne text-3xl md:text-5xl text-white/60 leading-tight animate-fade-in-blur" style={{ animationDelay: '0.2s' }}>
+              <p className="font-syne text-2xl sm:text-3xl md:text-5xl text-white/60 leading-tight animate-fade-in-blur" style={{ animationDelay: '0.2s' }}>
                 Static systems are a relic of the past. We build intelligence that <Highlight>flows like liquid</Highlight>, adapting to unseen challenges.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
                 <p className="text-white/40 leading-relaxed animate-fade-in-blur animate-text-bounce" style={{ animationDelay: '0.4s' }}>
                   Void Horizon merges <Highlight delay={300}>organic motion</Highlight> with rigorous engineering. Our systems aren't just solving problems; they are creating the next standard of digital experience.
                 </p>
@@ -842,22 +891,22 @@ const App = () => {
 
       <HorizontalHistory />
 
-      <section id="contact" className="py-40 px-6 border-t border-white/5 relative overflow-hidden">
+      <section id="contact" className="py-24 sm:py-32 md:py-40 px-4 sm:px-6 border-t border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-black"></div>
-        <div className="absolute top-0 right-0 w-[70%] h-full bg-[#bfff00] origin-top-right" style={{ clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)' }}>
+        <div className="absolute top-0 right-0 w-full md:w-[70%] h-full bg-[#bfff00] origin-top-right" style={{ clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)' }}>
           <div className="absolute inset-0 bg-black/10"></div>
         </div>
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="text-center mb-16" onMouseEnter={() => sounds.playFeedback('hover')}>
-            <h2 className="font-syne text-5xl md:text-8xl leading-none tracking-tighter mb-6 transition-colors duration-700">
+            <h2 className="font-syne text-4xl sm:text-5xl md:text-8xl leading-none tracking-tighter mb-5 sm:mb-6 transition-colors duration-700">
               <span className="inline-block whitespace-nowrap">
                 <span className="text-white">CONN</span><span className="text-black">ECT</span>
               </span>
             </h2>
-            <p className="text-black text-lg font-medium">Tell us about your project</p>
+            <p className="text-black text-base sm:text-lg font-medium">Tell us about your project</p>
           </div>
           
-          <form className="space-y-8 max-w-2xl mx-auto" onSubmit={(e) => { e.preventDefault(); sounds.playFeedback('click'); }}>
+          <form className="space-y-8 max-w-2xl mx-auto" onSubmit={(e) => { e.preventDefault(); submitContact(); }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black">Name</label>
@@ -865,6 +914,8 @@ const App = () => {
                   <input 
                     type="text" 
                     placeholder="Your name"
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
                     className="w-full bg-white rounded-xl px-6 py-4 text-black placeholder:text-black/40 focus:outline-none transition-colors"
                     onFocus={() => sounds.playFeedback('hover')}
                   />
@@ -876,6 +927,8 @@ const App = () => {
                   <input 
                     type="email" 
                     placeholder="your@email.com"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
                     className="w-full bg-white rounded-xl px-6 py-4 text-black placeholder:text-black/40 focus:outline-none transition-colors"
                     onFocus={() => sounds.playFeedback('hover')}
                   />
@@ -888,18 +941,27 @@ const App = () => {
                 <textarea 
                   placeholder="Describe your project requirements..."
                   rows={5}
+                  value={contactRequirement}
+                  onChange={(e) => setContactRequirement(e.target.value)}
                   className="w-full bg-white rounded-xl px-6 py-4 text-black placeholder:text-black/40 focus:outline-none transition-colors resize-none"
                   onFocus={() => sounds.playFeedback('hover')}
                 />
               </div>
             </div>
-            <button 
-              type="submit"
-              className="w-full bg-white text-black font-bold uppercase tracking-[0.3em] py-5 rounded-xl hover:bg-white/90 transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] text-sm"
-              onMouseEnter={() => sounds.playFeedback('hover')}
-            >
-              send message
-            </button>
+            <div className="relative">
+              <button 
+                type="submit"
+                className="w-full bg-white text-black font-bold uppercase tracking-[0.3em] py-5 rounded-xl hover:bg-white/90 transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] text-sm"
+                onMouseEnter={() => sounds.playFeedback('hover')}
+              >
+                send message
+              </button>
+              {toast && (
+                <div className={`absolute -top-12 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full text-[10px] font-bold tracking-wider shadow-[0_10px_30px_rgba(0,0,0,0.25)] ${toast.type === 'success' ? 'bg-black text-[#bfff00]' : toast.type === 'warn' ? 'bg-black text-white' : 'bg-black text-red-300'}`}>
+                  {toast.message}
+                </div>
+              )}
+            </div>
           </form>
           
           <div className="text-center mt-12">
@@ -952,7 +1014,7 @@ const App = () => {
         </div>
       </section>
 
-      <footer className="py-24 px-6 border-t border-white/5 bg-black/60 relative z-10">
+      <footer className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 border-t border-white/5 bg-black/60 relative z-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
           <div>
             <h2 className="font-syne text-4xl mb-8">VOID HORIZON</h2>
