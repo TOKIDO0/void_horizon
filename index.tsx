@@ -372,10 +372,10 @@ const HorizontalHistory = () => {
   ];
 
   return (
-    <section ref={containerRef} className="h-[500vh] relative z-20">
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-x-hidden bg-black border-t border-white/5 shadow-[0_-50px_100px_rgba(0,0,0,0.8)]">
+    <section ref={containerRef} className="h-[500vh] relative z-[50]">
+      <div className="sticky top-0 z-[60] h-screen w-full flex flex-col justify-start overflow-x-hidden bg-black border-t border-white/5 shadow-[0_-50px_100px_rgba(0,0,0,0.8)] pt-28 md:pt-32">
 
-        <div className="px-12 max-w-[1600px] mx-auto w-full mb-16 relative z-10 pt-8 md:pt-6">
+        <div className="px-12 max-w-[1600px] mx-auto w-full mb-16 relative z-10 pt-0">
           <div className="flex items-end justify-between mb-4">
             <h2 className="font-syne text-6xl md:text-9xl tracking-tighter bracket">
               COMPANY <span className="text-[#bfff00]">JOURNEY</span>
@@ -485,15 +485,15 @@ const FloatingParticles = () => {
 const Navbar = () => (
   <nav 
     onClick={() => sounds.init()}
-    className="fixed top-0 left-0 w-full z-[100] px-6 py-8 flex justify-between items-center text-white backdrop-blur-md bg-black/30"
+    className="fixed top-0 left-0 w-full z-[100] px-6 py-8 flex justify-between items-center"
   >
-    <div className="flex items-center gap-4 group cursor-pointer" onMouseEnter={() => sounds.playFeedback('hover')}>
+    <div className="flex items-center gap-4 group cursor-pointer mix-blend-difference" onMouseEnter={() => sounds.playFeedback('hover')}>
       <img src="/assets/logo/void_horizon .svg" alt="Void Horizon" className="h-10 group-hover:scale-110 transition-transform brightness-0 invert" />
     </div>
-    <div className="hidden md:flex gap-10 text-[10px] font-bold uppercase tracking-[0.2em]">
-      <a href="#works" className="text-white hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Solutions</a>
-      <a href="#about" className="text-white hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Manifesto</a>
-      <a href="#contact" className="text-white hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Contact</a>
+    <div className="hidden md:flex gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+      <a href="#works" className="mix-blend-difference hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Solutions</a>
+      <a href="#about" className="mix-blend-difference hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Manifesto</a>
+      <a href="#contact" className="mix-blend-difference hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Contact</a>
     </div>
   </nav>
 );
@@ -542,7 +542,7 @@ const AnimatedProjectTitle = ({ title, category, href = "#" }: { title: string, 
     <div className="relative z-10 flex-1 flex items-center px-8 transition-all duration-500 group-hover:translate-x-12">
       <div className="flex flex-col">
         <span className="text-[10px] uppercase font-bold tracking-widest text-white/30 group-hover:text-black/60 mb-2">{category}</span>
-        <h3 className="font-syne text-3xl md:text-6xl leading-none">
+        <h3 className="font-molgan text-3xl md:text-6xl leading-none">
           <GlitchText text={title} />
         </h3>
       </div>
@@ -600,10 +600,10 @@ const Hero = () => {
           <span className="bracket font-syne text-[#bfff00] text-sm uppercase tracking-widest block mb-6">
             CORPORATE VISION // CORE SYSTEMS
           </span>
-          <h1 className="font-syne text-6xl md:text-[12rem] leading-[0.8] text-white tracking-tighter mb-10">
+          <h1 className="font-hero text-6xl md:text-[12rem] leading-[0.8] text-white tracking-tighter mb-10">
             <GlitchText text="VOID" /><br /><GlitchText text="HORIZON" />
           </h1>
-          <p className="text-xl md:text-3xl text-white/40 max-w-2xl font-medium leading-tight">
+          <p className="font-hero2 text-xl md:text-3xl text-white/40 max-w-2xl font-medium leading-tight">
             We engineer <Highlight>fluid intelligence systems</Highlight> driven by technical precision and architectural agility to deliver business value.
           </p>
         </div>
@@ -804,11 +804,10 @@ const App = () => {
       <section id="works" className="py-40 relative bg-black">
         <div className="absolute inset-0 z-0">
           <img src="/assets/images/core.png" alt="" className="w-full h-full object-cover opacity-50" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80"></div>
         </div>
         <ScrollRevealSection>
           <div className="px-6 max-w-7xl mx-auto mb-20 relative z-10">
-            <h2 className="font-syne text-5xl md:text-7xl mb-4 bracket">Core Business Domains</h2>
+            <h2 className="font-molgan text-5xl md:text-7xl mb-4 bracket">Core Business Domains</h2>
           </div>
         </ScrollRevealSection>
         <div className="border-b border-white/5 relative z-10">
@@ -920,6 +919,8 @@ const App = () => {
               inset: -2px;
               border-radius: 0.75rem;
               padding: 2px;
+              pointer-events: none;
+              z-index: 0;
               background: linear-gradient(90deg, 
                 transparent 0%, 
                 transparent 45%, 
@@ -933,6 +934,11 @@ const App = () => {
               mask-composite: exclude;
               animation: beam-flow 3s linear infinite;
               filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+            }
+            .beam-input-wrapper > input,
+            .beam-input-wrapper > textarea {
+              position: relative;
+              z-index: 1;
             }
             @keyframes beam-flow {
               0% {
@@ -953,9 +959,6 @@ const App = () => {
             <p className="text-white/20 text-sm max-w-sm mb-12 leading-relaxed">
               Exploring the boundaries of digital creation. Constructing the foundations of the next intelligence era through neuromorphic motion.
             </p>
-            <div className="flex items-center gap-4 text-[#bfff00] text-[10px] font-bold tracking-[0.3em] uppercase">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#bfff00] animate-pulse"></div> Status: Operational
-            </div>
           </div>
           <div className="grid grid-cols-2 gap-12">
             <div className="flex flex-col gap-6">

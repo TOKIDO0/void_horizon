@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Void Horizon | Infinite Intelligence</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/logo/void_horizon .svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +17,21 @@
             --text-color: #e5e5e5;
             --accent-muted: rgba(191, 255, 0, 0.08);
         }
+        @font-face {
+            font-family: 'VHHero';
+            src: url('/assets/font/hero.ttf') format('truetype');
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'VHHero2';
+            src: url('/assets/font/hero2.ttf') format('truetype');
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'VHMolgan';
+            src: url('/assets/font/molgan.otf') format('opentype');
+            font-display: swap;
+        }
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-base);
@@ -24,6 +40,9 @@
             cursor: url('/assets/cursors/Default.webp') 0 0, auto;
         }
         .font-syne { font-family: 'Syne', sans-serif; }
+        .font-hero { font-family: 'VHHero', 'Syne', sans-serif; }
+        .font-hero2 { font-family: 'VHHero2', 'Inter', sans-serif; }
+        .font-molgan { font-family: 'VHMolgan', 'Syne', sans-serif; }
         
         /* 自定义光标状态 - 注意：WebP光标需要在服务器环境下才能正常显示 */
         * {
