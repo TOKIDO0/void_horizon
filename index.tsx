@@ -488,7 +488,7 @@ const Navbar = () => (
     className="fixed top-0 left-0 w-full z-[100] px-6 py-8 flex justify-between items-center"
   >
     <div className="flex items-center gap-4 group cursor-pointer mix-blend-difference" onMouseEnter={() => sounds.playFeedback('hover')}>
-      <img src="/assets/logo/void_horizon .svg" alt="Void Horizon" className="h-10 group-hover:scale-110 transition-transform brightness-0 invert" />
+      <img src="/assets/logo/void_horizon.svg" alt="Void Horizon" className="h-10 group-hover:scale-110 transition-transform brightness-0 invert" />
     </div>
     <div className="hidden md:flex gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-white">
       <a href="#works" className="mix-blend-difference hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Solutions</a>
@@ -500,7 +500,7 @@ const Navbar = () => (
 
 const Ticker = () => {
   const brands = [
-    { type: 'img', src: '/assets/logo/void_horizon .svg', alt: 'Void Horizon', size: 'h-8' },
+    { type: 'img', src: '/assets/logo/void_horizon.svg', alt: 'Void Horizon', size: 'h-8' },
     { type: 'icon', name: 'simple-icons:windsurf', size: 32 },
     { type: 'icon', name: 'skill-icons:github-light', size: 32 },
     { type: 'icon', name: 'skill-icons:supabase-light', size: 32 },
