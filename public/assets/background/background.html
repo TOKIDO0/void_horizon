@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Void Horizon | ASCII Wave</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #000000;
+            --brand-green: #bfff00;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-green);
+            font-family: 'JetBrains Mono', monospace; /* 强制等宽字体 */
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* 核心 Canvas */
+        #ascii-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* 稍微加一点发光，让字符看起来像 CRT 屏幕 */
+            filter: drop-shadow(0 0 2px rgba(191, 255, 0, 0.3));
+        }
+
+        /* 装饰性暗角 */
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 40%, #000 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+    
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+        "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+        "react/": "https://esm.sh/react@^19.2.3/"
+      }
+    }
+    </script>
+</head>
+<body>
+
+    <canvas id="ascii-canvas"></canvas>
+    <div class="vignette"></div>
+
+    <!-- 你的 React 应用挂载点 (目前是空的，只显示背景) -->
+    <div id="root"></div>
+
+    <script type="module" src="index.tsx"></script>
+
+    <script>
+        /**
+         * ASCII Fluid Terrain
+         * 核心逻辑：
+         * 1. 将屏幕分割成网格 (Grid)。
+         * 2. 每一帧计算该网格点的正弦波叠加值 (Simulate Ocean Waves)。
+         * 3. 将高度值 (-1 到 1) 映射到字符集 (Char Set)。
+         * 4. 动态改变颜色亮度和字符，形成视觉上的波浪。
+         */
+        const canvas = document.getElementById('ascii-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 字符集：从疏到密
+        // const chars = " .:-=+*#%@"; 
+        const chars = " ··:-=+*#%@"; // 稍微调整，让暗部更干净
+        
+        let width, height;
+        const fontSize = 14;
+        let columns, rows;
+        
+        let mouse = { x: 0, y: 0 };
+        // 目标鼠标位置 (用于平滑移动)
+        let targetMouse = { x: 0, y: 0 }; 
+        
+        window.addEventListener('mousemove', e => {
+            targetMouse.x = e.clientX;
+            targetMouse.y = e.clientY;
+        });
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            
+            columns = Math.ceil(width / fontSize);
+            rows = Math.ceil(height / fontSize);
+            
+            // 设置字体
+            ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+        }
+
+        let time = 0;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // 黑色背景清屏
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, width, height);
+            
+            // 鼠标平滑插值
+            mouse.x += (targetMouse.x - mouse.x) * 0.1;
+            mouse.y += (targetMouse.y - mouse.y) * 0.1;
+            
+            time += 0.02; // 时间流速
+
+            // 遍历网格
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < columns; x++) {
+                    
+                    // 1. 计算基础波形 (Wave Simulation)
+                    // 组合多个正弦波，创造复杂的“地形”感
+                    const px = x * 0.1;
+                    const py = y * 0.1;
+                    
+                    let wave = Math.sin(px + time) + 
+                               Math.cos(py + time * 0.5) + 
+                               Math.sin((px + py) * 0.5 + time);
+                    
+                    // 2. 鼠标交互 (Distortion)
+                    // 计算当前格点距离鼠标的距离
+                    const dx = (x * fontSize) - mouse.x;
+                    const dy = (y * fontSize) - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // 鼠标附近产生强烈的波纹扰动
+                    if (dist < 400) {
+                        const force = (400 - dist) / 400;
+                        wave += Math.sin(dist * 0.05 - time * 5) * force * 2;
+                    }
+
+                    // 3. 映射到字符索引
+                    // wave 的范围大概是 -3 到 3，我们把它映射到 0 - chars.length
+                    const mapVal = (wave + 3) / 6; // 归一化到 0-1
+                    let charIndex = Math.floor(mapVal * chars.length);
+                    
+                    // 边界限制
+                    if (charIndex < 0) charIndex = 0;
+                    if (charIndex >= chars.length) charIndex = chars.length - 1;
+                    
+                    const char = chars[charIndex];
+
+                    // 4. 颜色处理
+                    // 只有当字符比较“重”（即 wave 比较高）时，颜色才亮
+                    // 这样可以创造深邃感
+                    if (charIndex > 0) {
+                        const alpha = mapVal * mapVal; // 伽马校正，让暗部更暗，亮部更亮
+                        
+                        // 距离鼠标特别近的地方变白 (高亮)
+                        if (dist < 100) {
+                            ctx.fillStyle = '#ffffff';
+                        } else {
+                            // 正常的品牌绿
+                            ctx.fillStyle = `rgba(191, 255, 0, ${alpha})`;
+                        }
+                        
+                        ctx.fillText(char, x * fontSize, y * fontSize);
+                    }
+                }
+            }
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+        animate();
+
+    </script>
+</body>
+</html>
