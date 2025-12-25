@@ -255,7 +255,7 @@ interface HistoryCardProps {
 }
 
 const HistoryCard: React.FC<HistoryCardProps> = ({ year, title, summary, desc, media, index, progress }) => {
-  const enterThreshold = index * 0.18; 
+  const enterThreshold = 0.15; 
   const isActive = progress > enterThreshold;
   
   return (
@@ -372,8 +372,8 @@ const HorizontalHistory = () => {
   ];
 
   return (
-    <section ref={containerRef} className="h-[500vh] relative">
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-x-hidden bg-black z-[30] border-t border-white/5 shadow-[0_-50px_100px_rgba(0,0,0,0.8)]">
+    <section ref={containerRef} className="h-[500vh] relative z-20">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-x-hidden bg-black border-t border-white/5 shadow-[0_-50px_100px_rgba(0,0,0,0.8)]">
 
         <div className="px-12 max-w-[1600px] mx-auto w-full mb-16 relative z-10 pt-8 md:pt-6">
           <div className="flex items-end justify-between mb-4">
@@ -485,22 +485,22 @@ const FloatingParticles = () => {
 const Navbar = () => (
   <nav 
     onClick={() => sounds.init()}
-    className="fixed top-0 left-0 w-full z-[100] px-6 py-8 flex justify-between items-center mix-blend-difference text-white"
+    className="fixed top-0 left-0 w-full z-[100] px-6 py-8 flex justify-between items-center text-white backdrop-blur-md bg-black/30"
   >
     <div className="flex items-center gap-4 group cursor-pointer" onMouseEnter={() => sounds.playFeedback('hover')}>
-      <img src="/assets/logo/Void Horizon.svg" alt="Void Horizon" className="h-8 group-hover:scale-110 transition-transform" />
+      <img src="/assets/logo/void_horizon .svg" alt="Void Horizon" className="h-10 group-hover:scale-110 transition-transform brightness-0 invert" />
     </div>
     <div className="hidden md:flex gap-10 text-[10px] font-bold uppercase tracking-[0.2em]">
-      <a href="#works" className="hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Solutions</a>
-      <a href="#about" className="hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Manifesto</a>
-      <a href="#contact" className="hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Contact</a>
+      <a href="#works" className="text-white hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Solutions</a>
+      <a href="#about" className="text-white hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Manifesto</a>
+      <a href="#contact" className="text-white hover:text-[#bfff00] transition-colors" onMouseEnter={() => sounds.playFeedback('hover')}>Contact</a>
     </div>
   </nav>
 );
 
 const Ticker = () => {
   const brands = [
-    { type: 'img', src: '/assets/logo/Void Horizon.svg', alt: 'Void Horizon', size: 'h-8' },
+    { type: 'img', src: '/assets/logo/void_horizon .svg', alt: 'Void Horizon', size: 'h-8' },
     { type: 'icon', name: 'simple-icons:windsurf', size: 32 },
     { type: 'icon', name: 'skill-icons:github-light', size: 32 },
     { type: 'icon', name: 'skill-icons:supabase-light', size: 32 },
@@ -798,7 +798,6 @@ const App = () => {
   return (
     <div className="relative selection:bg-[#bfff00] selection:text-black" onMouseMove={() => sounds.init()}>
       <Navbar />
-      <FloatingParticles />
       <Hero />
       <Ticker />
       
@@ -819,11 +818,7 @@ const App = () => {
         </div>
       </section>
       
-      <section id="about" className="py-40 px-6 relative overflow-hidden bg-black">
-        <div className="absolute inset-0 z-0">
-          <img src="/assets/images/ethos.png" alt="" className="w-full h-full object-cover opacity-50" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80"></div>
-        </div>
+      <section id="about" className="py-40 px-6 relative overflow-hidden bg-black z-10">
         <ScrollRevealSection>
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-20 relative z-10">
             <div className="md:w-1/3">
@@ -848,61 +843,106 @@ const App = () => {
 
       <HorizontalHistory />
 
-      <section id="contact" className="py-40 px-6 border-t border-white/5 relative bg-black">
+      <section id="contact" className="py-40 px-6 border-t border-white/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black"></div>
+        <div className="absolute top-0 right-0 w-[70%] h-full bg-[#bfff00] origin-top-right" style={{ clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)' }}>
+          <div className="absolute inset-0 bg-black/10"></div>
+        </div>
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="text-center mb-16" onMouseEnter={() => sounds.playFeedback('hover')}>
             <h2 className="font-syne text-5xl md:text-8xl leading-none tracking-tighter mb-6 transition-colors duration-700">
               <span className="inline-block whitespace-nowrap">
-                <Highlight delay={200}><GlitchText text="CONN" /></Highlight><GlitchText text="ECT" />
+                <span className="text-white">CONN</span><span className="text-black">ECT</span>
               </span>
             </h2>
-            <p className="text-white/40 text-lg">Tell us about your project</p>
+            <p className="text-black text-lg font-medium">Tell us about your project</p>
           </div>
           
           <form className="space-y-8 max-w-2xl mx-auto" onSubmit={(e) => { e.preventDefault(); sounds.playFeedback('click'); }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white/40">Name</label>
-                <input 
-                  type="text" 
-                  placeholder="Your name"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-[#bfff00]/50 transition-colors"
-                  onFocus={() => sounds.playFeedback('hover')}
-                />
+                <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black">Name</label>
+                <div className="relative beam-input-wrapper">
+                  <input 
+                    type="text" 
+                    placeholder="Your name"
+                    className="w-full bg-white rounded-xl px-6 py-4 text-black placeholder:text-black/40 focus:outline-none transition-colors"
+                    onFocus={() => sounds.playFeedback('hover')}
+                  />
+                </div>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white/40">Email</label>
-                <input 
-                  type="email" 
-                  placeholder="your@email.com"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-[#bfff00]/50 transition-colors"
-                  onFocus={() => sounds.playFeedback('hover')}
-                />
+                <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black">Email</label>
+                <div className="relative beam-input-wrapper">
+                  <input 
+                    type="email" 
+                    placeholder="your@email.com"
+                    className="w-full bg-white rounded-xl px-6 py-4 text-black placeholder:text-black/40 focus:outline-none transition-colors"
+                    onFocus={() => sounds.playFeedback('hover')}
+                  />
+                </div>
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white/40">Requirement</label>
-              <textarea 
-                placeholder="Describe your project requirements..."
-                rows={5}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder:text-white/20 focus:outline-none focus:border-[#bfff00]/50 transition-colors resize-none"
-                onFocus={() => sounds.playFeedback('hover')}
-              />
+              <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black">Requirement</label>
+              <div className="relative beam-input-wrapper">
+                <textarea 
+                  placeholder="Describe your project requirements..."
+                  rows={5}
+                  className="w-full bg-white rounded-xl px-6 py-4 text-black placeholder:text-black/40 focus:outline-none transition-colors resize-none"
+                  onFocus={() => sounds.playFeedback('hover')}
+                />
+              </div>
             </div>
             <button 
               type="submit"
-              className="w-full bg-[#bfff00] text-black font-bold uppercase tracking-[0.3em] py-5 rounded-xl hover:bg-[#d4ff4d] transition-all duration-300 hover:shadow-[0_0_40px_rgba(191,255,0,0.4)] text-sm"
+              className="w-full bg-white text-black font-bold uppercase tracking-[0.3em] py-5 rounded-xl hover:bg-white/90 transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] text-sm"
               onMouseEnter={() => sounds.playFeedback('hover')}
             >
-              Send Message
+              send message
             </button>
           </form>
           
           <div className="text-center mt-12">
-            <a href="mailto:hello@voidhorizon.com" className="inline-block text-sm font-bold uppercase tracking-[0.4em] text-white/30 hover:text-[#bfff00] transition-all">
+            <a href="mailto:hello@voidhorizon.com" className="inline-block text-sm font-bold tracking-[0.4em] text-black hover:text-black/70 transition-all">
               hello@voidhorizon.com
             </a>
           </div>
+          
+          <style>{`
+            .beam-input-wrapper {
+              position: relative;
+              border-radius: 0.75rem;
+            }
+            .beam-input-wrapper::before {
+              content: '';
+              position: absolute;
+              inset: -2px;
+              border-radius: 0.75rem;
+              padding: 2px;
+              background: linear-gradient(90deg, 
+                transparent 0%, 
+                transparent 45%, 
+                rgba(0, 0, 0, 0.8) 50%, 
+                transparent 55%, 
+                transparent 100%
+              );
+              background-size: 200% 100%;
+              -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+              -webkit-mask-composite: xor;
+              mask-composite: exclude;
+              animation: beam-flow 3s linear infinite;
+              filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+            }
+            @keyframes beam-flow {
+              0% {
+                background-position: -200% 0;
+              }
+              100% {
+                background-position: 200% 0;
+              }
+            }
+          `}</style>
         </div>
       </section>
 
