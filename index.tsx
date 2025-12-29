@@ -243,196 +243,7 @@ const GlitchText = ({ text, className = "" }: { text: string, className?: string
   );
 };
 
-// --- History Components ---
-interface HistoryCardProps {
-  year: string;
-  title: string;
-  summary?: string;
-  desc: string;
-  media?: string;
-  index: number;
-  progress: number;
-}
 
-const HistoryCard: React.FC<HistoryCardProps> = ({ year, title, summary, desc, media, index, progress }) => {
-  const enterThreshold = 0.15; 
-  const isActive = progress > enterThreshold;
-  
-  return (
-    <div 
-      onMouseEnter={() => sounds.playFeedback('hover')}
-      style={{ willChange: isActive ? 'auto' : 'transform, opacity' }}
-      className={`group min-w-[280px] sm:min-w-[360px] lg:min-w-[440px] h-[420px] sm:h-[500px] lg:h-[550px] flex flex-col justify-end p-6 sm:p-10 lg:p-12 border border-white/5 bg-black/30 backdrop-blur-2xl rounded-[2rem] sm:rounded-[2.5rem] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] transform relative overflow-hidden ${isActive ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-24 sm:translate-y-32 opacity-0 scale-95'} hover:bg-black/20 hover:border-[#bfff00]/20`}
-    >
-      {media && (
-        <>
-          <video 
-            className="absolute top-0 left-0 w-full h-full object-cover opacity-90 group-hover:opacity-95 transition-opacity duration-500"
-            style={{ minHeight: '100%', minWidth: '100%' }}
-            autoPlay 
-            loop 
-            muted 
-            playsInline
-          >
-            <source src={media} type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/30 to-black/60 pointer-events-none"></div>
-        </>
-      )}
-      <div className="absolute top-6 left-6 sm:top-12 sm:left-12 transition-transform duration-700 group-hover:-translate-y-4 group-hover:-translate-x-4">
-        <span className="font-syne text-[#bfff00] text-6xl sm:text-8xl lg:text-9xl opacity-20 select-none transition-opacity group-hover:opacity-40">{year}</span>
-      </div>
-
-      <div className="relative z-10">
-        <h4 className="font-syne text-2xl sm:text-3xl text-white mb-4 sm:mb-6 uppercase tracking-tighter leading-none transition-transform duration-500 group-hover:-translate-y-2">
-          {title}
-        </h4>
-        {summary && (
-          <p className="text-white/70 text-sm sm:text-base mb-3 sm:mb-4 font-medium tracking-tight">
-            {summary}
-          </p>
-        )}
-        
-        <div className="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-out group-hover:max-h-40 group-hover:opacity-100 group-hover:mb-4">
-          <p className="text-white/60 leading-relaxed text-sm sm:text-base font-medium border-l-2 border-[#bfff00]/30 pl-4 py-1">
-            {desc}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 text-[10px] font-bold text-[#bfff00]/40 group-hover:text-[#bfff00] transition-colors">
-          <Activity size={12} /> FULL LOG ACCESSIBLE
-        </div>
-      </div>
-
-      <div className={`absolute -top-6 -right-6 sm:-top-8 sm:-right-8 w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 bg-[#bfff00] text-black rounded-full flex items-center justify-center font-bold text-[10px] sm:text-[11px] shadow-[0_20px_50px_rgba(191,255,0,0.3)] transition-all duration-700 delay-150 transform ${isActive ? 'scale-100 opacity-100 rotate-12' : 'scale-0 opacity-0 rotate-0'} group-hover:rotate-[32deg] group-hover:scale-110`}>
-        <span className="px-6 text-center leading-tight uppercase tracking-[0.2em]">VH-PROTO-{(index + 1).toString().padStart(2, '0')}</span>
-      </div>
-    </div>
-  );
-};
-
-const HorizontalHistory = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const [maxTranslatePx, setMaxTranslatePx] = useState<number>(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const progress = Math.max(0, Math.min(1, -rect.top / (rect.height - window.innerHeight)));
-      setScrollProgress(progress);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const update = () => {
-      const el = scrollerRef.current;
-      if (!el) return;
-      const translate = Math.max(0, el.scrollWidth - el.clientWidth);
-      setMaxTranslatePx(translate);
-    };
-    update();
-    window.addEventListener('resize', update, { passive: true });
-    return () => window.removeEventListener('resize', update);
-  }, []);
-
-  const historyData = [
-    { 
-      year: "2024", 
-      title: "Aesthetic Foundation", 
-      summary: "Graduated and began an intensive observation of digital media and modern design.", 
-      desc: "After graduating in 2024, I entered a period of self-refinement. Immersing myself in avant-garde game visuals and digital media helped me build a distinct aesthetic framework that now powers my pursuit of high-end web experiences.",
-      media: "/assets/videos/card1.mp4"
-    },
-    { 
-      year: "2025", 
-      title: "AI-Assisted Development Shift", 
-      summary: "Explored AI programming tools and efficient web development solutions.", 
-      desc: "In November 2025, I began formally learning how to leverage AI tools for web development. Through deep application of AI-assisted programming, I achieved a breakthrough from zero to one, mastering the core skills for rapidly building modern responsive websites.",
-      media: "/assets/videos/card2.mp4"
-    },
-    { 
-      year: "2025", 
-      title: "First Full-Stack Project", 
-      summary: "Independently completed a website with front-end and back-end management system.", 
-      desc: "Just last week, I successfully delivered my first complete website project. It features not only a high-visual-standard front-end display but also a back-end management system for user information management. This practice proved my ability to handle complex business requirements independently.",
-      media: "/assets/videos/card3.mp4"
-    },
-    { 
-      year: "2025", 
-      title: "Void Horizon Founded", 
-      summary: "Integrated personal skills and aesthetics to launch professional web design services.", 
-      desc: "After completing my first project, I officially named my service system Void Horizon. I decided to operate as an independent studio, providing web development, back-end management, and AI solution customization for clients seeking unique aesthetics and high-performance experiences.",
-      media: "/assets/videos/card4.mp4"
-    },
-    { 
-      year: "2025", 
-      title: "Visual System R&D", 
-      summary: "Developed this project with surrealist visuals to enhance brand value.", 
-      desc: "This is my second core project. Here I applied more impactful visual effects and fluid interaction design. I am committed to transforming complex technical logic into smooth user experiences, ensuring the website possesses top-tier brand quality while remaining fully functional.",
-      media: "/assets/videos/card5.mp4"
-    },
-    { 
-      year: "2026", 
-      title: "Empowering AI Future", 
-      summary: "Providing AI-driven web and management solutions for young entrepreneurs.", 
-      desc: "Entering 2026, Void Horizon will continue exploring the deep integration of AI and web design. We will continuously optimize our service process, providing clients with digital tools that are not only beautiful but also easy to maintain, helping individuals and businesses build their professional presence in the internet age.",
-      media: "/assets/videos/card6.mp4"
-    }
-  ];
-
-  return (
-    <section ref={containerRef} className="h-[500vh] relative z-[50]">
-      <div className="sticky top-20 sm:top-24 z-[60] h-[calc(100svh-5rem)] sm:h-[calc(100svh-6rem)] md:h-[calc(100vh-6rem)] w-full flex flex-col justify-start overflow-hidden overscroll-none bg-black border-t border-white/5 shadow-[0_-50px_100px_rgba(0,0,0,0.8)] touch-pan-y">
-
-        <div className="px-4 sm:px-8 lg:px-12 max-w-[1600px] mx-auto w-full mb-10 sm:mb-16 relative z-10 pt-0">
-          <div className="flex items-end justify-between mb-4">
-            <h2 className="font-syne text-4xl sm:text-6xl md:text-9xl tracking-tighter bracket">
-              COMPANY <span className="text-[#bfff00]">JOURNEY</span>
-            </h2>
-            <div className="hidden md:flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.6em] text-white/30 mb-4">
-              <div className="w-1.5 h-1.5 bg-[#bfff00] rounded-full animate-pulse"></div>
-              OPERATIONAL LOG // V 3.0
-            </div>
-          </div>
-          <div className="h-1 w-full bg-white/5 relative overflow-hidden rounded-full">
-            <div 
-              className="h-full bg-[#bfff00] shadow-[0_0_25px_#bfff00] transition-all duration-300 ease-out" 
-              style={{ width: `${scrollProgress * 100}%` }}
-            />
-          </div>
-        </div>
-        
-        <div 
-          ref={scrollerRef}
-          className="flex gap-8 sm:gap-14 lg:gap-20 pl-[100vw] pr-[50vw] py-12 sm:py-16 lg:py-20"
-          style={{ 
-            transform: `translate3d(${-scrollProgress * maxTranslatePx}px, 0, 0)`,
-            willChange: 'transform',
-            transition: 'transform 0.1s ease-out'
-          }}
-        >
-          {historyData.map((item, i) => (
-            <HistoryCard 
-              key={i} 
-              index={i} 
-              progress={scrollProgress} 
-              year={item.year}
-              title={item.title}
-              summary={item.summary}
-              desc={item.desc}
-              media={item.media}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 // --- Utilities ---
 const Highlight = ({ children, delay = 0 }: { children?: React.ReactNode, delay?: number }) => {
@@ -458,44 +269,6 @@ const Highlight = ({ children, delay = 0 }: { children?: React.ReactNode, delay?
   );
 };
 
-const FloatingParticles = () => {
-  const parallaxOffset = useParallax(0.05);
-  const particles = useMemo(() => {
-    return Array.from({ length: 25 }).map((_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      size: `${Math.random() * 2 + 0.5}px`,
-      delay: `${Math.random() * 5}s`,
-      duration: `${Math.random() * 15 + 10}s`,
-      opacity: Math.random() * 0.4 + 0.1
-    }));
-  }, []);
-
-  return (
-    <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden" style={{ transform: `translateY(${parallaxOffset}px)` }}>
-      {particles.map(p => (
-        <div 
-          key={p.id}
-          className="absolute rounded-full bg-[#bfff00] blur-[1px]"
-          style={{
-            left: p.left, top: p.top, width: p.size, height: p.size,
-            opacity: p.opacity, animation: `floatUp ${p.duration} linear infinite`,
-            animationDelay: p.delay
-          }}
-        />
-      ))}
-      <style>{`
-        @keyframes floatUp {
-          0% { transform: translateY(110vh) translateX(0); opacity: 0; }
-          20% { opacity: 0.4; }
-          80% { opacity: 0.4; }
-          100% { transform: translateY(-20vh) translateX(20px); opacity: 0; }
-        }
-      `}</style>
-    </div>
-  );
-};
 
 const Navbar = () => (
   <nav 
@@ -732,12 +505,12 @@ const AIConcierge = () => {
   return (
     <div className="fixed bottom-10 right-10 z-[200] flex flex-col items-end">
       <div className={`
-        w-80 md:w-96 h-[450px] bg-[#040504] border border-[#bfff00]/30 rounded-2xl flex flex-col 
-        shadow-[0_0_80px_rgba(0,0,0,0.8)] 
+        w-80 md:w-96 h-[450px] bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl flex flex-col 
+        shadow-[0_0_80px_rgba(255,255,255,0.1)] 
         origin-bottom-right transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
         ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none'}
       `}>
-        <div className="p-4 border-b border-white/5 flex justify-between items-center bg-[#bfff00]/5 rounded-t-2xl relative">
+        <div className="p-4 border-b border-white/10 flex justify-between items-center bg-white/5 rounded-t-2xl relative">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-[#bfff00] animate-pulse"></div>
             <div className="flex flex-col">
@@ -766,8 +539,8 @@ const AIConcierge = () => {
           )}
           <div ref={scrollRef} />
         </div>
-        <div className="p-4 bg-white/5 rounded-b-2xl border-t border-white/5">
-          <div className="relative flex items-center bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus-within:border-[#bfff00]/50 transition-colors">
+        <div className="p-4 bg-white/5 rounded-b-2xl border-t border-white/10">
+          <div className="relative flex items-center bg-black/40 border border-white/20 rounded-lg px-4 py-3 focus-within:border-white/40 transition-colors">
             <input 
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -889,8 +662,89 @@ const App = () => {
         </ScrollRevealSection>
       </section>
 
-      <HorizontalHistory />
+      <section id="workflow" className="py-24 sm:py-32 md:py-40 px-4 sm:px-6 relative overflow-hidden bg-black">
+        <ScrollRevealSection>
+          <div className="max-w-7xl mx-auto mb-20 relative z-10">
+            <h2 className="font-molgan text-3xl sm:text-5xl md:text-7xl mb-3 sm:mb-4 bracket">Workflow Process</h2>
+          </div>
+        </ScrollRevealSection>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                step: "01",
+                title: "Discovery",
+                desc: "Deep dive into your requirements and business objectives",
+                icon: "iconoir:search",
+                video: "/assets/videos/card1.mp4"
+              },
+              {
+                step: "02", 
+                title: "AI Modeling",
+                desc: "Leverage AI tools for rapid prototyping and development",
+                icon: "iconoir:brain",
+                video: "/assets/videos/card2.mp4"
+              },
+              {
+                step: "03",
+                title: "Development", 
+                desc: "Build with cutting-edge web technologies and best practices",
+                icon: "iconoir:code",
+                video: "/assets/videos/card3.mp4"
+              },
+              {
+                step: "04",
+                title: "Delivery",
+                desc: "Deploy optimized solutions with ongoing support",
+                icon: "iconoir:rocket",
+                video: "/assets/videos/card4.mp4"
+              }
+            ].map((item, index) => (
+              <ScrollRevealSection key={index}>
+                <div 
+                  className="group relative h-[400px] sm:h-[450px] border border-white/5 bg-black/30 backdrop-blur-xl rounded-2xl transition-all duration-700 hover:bg-black/20 hover:border-[#bfff00]/20 hover:transform hover:-translate-y-2 overflow-hidden"
+                  onMouseEnter={() => sounds.playFeedback('hover')}
+                >
+                  {item.video && (
+                    <>
+                      <video 
+                        className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-500"
+                        autoPlay 
+                        loop 
+                        muted 
+                        playsInline
+                      >
+                        <source src={item.video} type="video/mp4" />
+                      </video>
+                      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60 pointer-events-none"></div>
+                    </>
+                  )}
+                  <div className="absolute top-4 left-4 text-6xl sm:text-7xl font-syne text-[#bfff00]/20 select-none">
+                    {item.step}
+                  </div>
+                  <div className="relative z-10 p-8 h-full flex flex-col justify-center">
+                    <div className="text-4xl mb-4 text-white">
+                      <span className="iconify" data-icon={item.icon} data-width="48"></span>
+                    </div>
+                    <h3 className="font-syne text-xl sm:text-2xl text-white mb-3 uppercase tracking-tighter">
+                      {item.title}
+                    </h3>
+                    <p className="text-white/60 text-sm leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-16 h-16 bg-[#bfff00]/10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="w-2 h-2 bg-[#bfff00] rounded-full animate-pulse"></div>
+                  </div>
+                </div>
+              </ScrollRevealSection>
+            ))}
+          </div>
+        </div>
+      </section>
 
+      
       <section id="contact" className="py-24 sm:py-32 md:py-40 px-4 sm:px-6 border-t border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-black"></div>
         <div className="absolute top-0 right-0 w-full md:w-[70%] h-full bg-[#bfff00] origin-top-right" style={{ clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)' }}>
@@ -909,7 +763,7 @@ const App = () => {
           <form className="space-y-8 max-w-2xl mx-auto" onSubmit={(e) => { e.preventDefault(); submitContact(); }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black">Name</label>
+                <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white">Name</label>
                 <div className="relative beam-input-wrapper">
                   <input 
                     type="text" 
@@ -922,7 +776,7 @@ const App = () => {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black">Email</label>
+                <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white">Email</label>
                 <div className="relative beam-input-wrapper">
                   <input 
                     type="email" 
@@ -936,7 +790,7 @@ const App = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black">Requirement</label>
+              <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white">Requirement</label>
               <div className="relative beam-input-wrapper">
                 <textarea 
                   placeholder="Describe your project requirements..."

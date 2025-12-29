@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="/assets/font/hero.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="/assets/font/hero2.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="/assets/font/molgan.otf" as="font" type="font/otf" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <style>
@@ -61,27 +64,7 @@
             cursor: url('/assets/cursors/Loading.webp') 16 16, wait !important;
         }
         
-        /* 全局噪点层 */
-        .noise {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://cdn.prod.website-files.com/623d7fcefbef3a6d988de677/623d7fcefbef3a7b3c8de6a4_noise.png');
-            opacity: 0.05;
-            pointer-events: none;
-            z-index: 9999;
-        }
 
-        /* ASCII Canvas 背景 - 仅在Hero区域显示 */
-        #ascii-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 0;
-            filter: drop-shadow(0 0 2px rgba(191, 255, 0, 0.3));
-            pointer-events: none;
-        }
 
         /* 背景容器 */
         .vibrant-bg {
@@ -94,58 +77,8 @@
             pointer-events: none;
         }
 
-        /* 3D 透视网格 */
-        .bg-grid-3d {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background-image: 
-                linear-gradient(to right, rgba(191, 255, 0, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(191, 255, 0, 0.04) 1px, transparent 1px);
-            background-size: 80px 80px;
-            transform: rotateX(60deg);
-            transform-origin: center;
-            animation: gridMove 20s linear infinite;
-        }
 
-        @keyframes gridMove {
-            0% { transform: rotateX(60deg) translateY(0); }
-            100% { transform: rotateX(60deg) translateY(80px); }
-        }
 
-        /* 扫描线系统 */
-        .scanlines {
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 1px,
-                rgba(0, 0, 0, 0.3) 2px,
-                rgba(0, 0, 0, 0.3) 3px
-            );
-            pointer-events: none;
-            opacity: 0.4;
-        }
-
-        /* 循环下降的扫描光带 */
-        .scanner-beam {
-            position: absolute;
-            top: -100px;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: linear-gradient(to bottom, transparent, rgba(191, 255, 0, 0.03), transparent);
-            animation: scanBeam 6s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes scanBeam {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(120vh); }
-        }
 
         /* 暗角效果 */
         .vignette {
@@ -155,20 +88,6 @@
             pointer-events: none;
         }
 
-        /* 动态背景光晕 */
-        .aura {
-            position: absolute;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, var(--accent-muted) 0%, transparent 70%);
-            filter: blur(150px);
-            border-radius: 50%;
-            opacity: 0.6;
-            pointer-events: none;
-            transition: transform 0.2s ease-out; /* 响应鼠标视差 */
-        }
-        .aura-1 { top: -10%; left: -10%; }
-        .aura-2 { bottom: -10%; right: -10%; }
 
         /* --- 倾斜荧光笔效果 --- */
         .highlighter-text {
@@ -286,116 +205,10 @@
 <link rel="stylesheet" href="/index.css">
 </head>
 <body>
-    <div class="noise"></div>
     <div class="vibrant-bg" id="bg-parallax">
-        <div class="bg-grid-3d"></div>
-        <div class="scanner-beam"></div>
-        <div class="scanlines"></div>
         <div class="vignette"></div>
-        <div id="aura-1" class="aura aura-1"></div>
-        <div id="aura-2" class="aura aura-2"></div>
     </div>
     <div id="root"></div>
     <script type="module" src="index.tsx"></script>
-    <script>
-        // ASCII Fluid Terrain Animation
-        const canvas = document.getElementById('ascii-canvas');
-        const ctx = canvas.getContext('2d');
-        
-        const chars = " ··:-=+*#%@";
-        let width, height;
-        const fontSize = 14;
-        let columns, rows;
-        
-        let mouse = { x: 0, y: 0 };
-        let targetMouse = { x: 0, y: 0 };
-        
-        window.addEventListener('mousemove', e => {
-            targetMouse.x = e.clientX;
-            targetMouse.y = e.clientY;
-            
-            // 背景光晕鼠标视差
-            const aura1 = document.getElementById('aura-1');
-            const aura2 = document.getElementById('aura-2');
-            const moveX = (e.clientX / window.innerWidth - 0.5) * 50;
-            const moveY = (e.clientY / window.innerHeight - 0.5) * 50;
-            
-            if (aura1) aura1.style.transform = `translate(${moveX}px, ${moveY}px)`;
-            if (aura2) aura2.style.transform = `translate(${-moveX}px, ${-moveY}px)`;
-        });
-
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-            
-            columns = Math.ceil(width / fontSize);
-            rows = Math.ceil(height / fontSize);
-            
-            ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-        }
-
-        let time = 0;
-
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            ctx.fillStyle = '#000000';
-            ctx.fillRect(0, 0, width, height);
-            
-            mouse.x += (targetMouse.x - mouse.x) * 0.1;
-            mouse.y += (targetMouse.y - mouse.y) * 0.1;
-            
-            time += 0.02;
-
-            for (let y = 0; y < rows; y++) {
-                for (let x = 0; x < columns; x++) {
-                    const px = x * 0.1;
-                    const py = y * 0.1;
-                    
-                    let wave = Math.sin(px + time) + 
-                               Math.cos(py + time * 0.5) + 
-                               Math.sin((px + py) * 0.5 + time);
-                    
-                    const dx = (x * fontSize) - mouse.x;
-                    const dy = (y * fontSize) - mouse.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (dist < 400) {
-                        const force = (400 - dist) / 400;
-                        wave += Math.sin(dist * 0.05 - time * 5) * force * 2;
-                    }
-
-                    const mapVal = (wave + 3) / 6;
-                    let charIndex = Math.floor(mapVal * chars.length);
-                    
-                    if (charIndex < 0) charIndex = 0;
-                    if (charIndex >= chars.length) charIndex = chars.length - 1;
-                    
-                    const char = chars[charIndex];
-
-                    if (charIndex > 0) {
-                        const alpha = mapVal * mapVal;
-                        
-                        if (dist < 100) {
-                            ctx.fillStyle = '#ffffff';
-                        } else {
-                            ctx.fillStyle = `rgba(191, 255, 0, ${alpha})`;
-                        }
-                        
-                        ctx.fillText(char, x * fontSize, y * fontSize);
-                    }
-                }
-            }
-        }
-
-        resize();
-        window.addEventListener('resize', resize);
-        animate();
-    </script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>

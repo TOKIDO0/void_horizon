@@ -31,7 +31,6 @@
   - `SoundManager`: Handles all UI audio feedback.
   - `GlitchText`: The primary interactive text component with scrambled character logic.
   - `AIConcierge`: A sophisticated chat interface using Gemini 3 Flash. Includes iMessage-style entry animations (`message-enter` class).
-  - `HorizontalHistory`: A timeline component for the company journey.
   - `ProjectDetailModal`: A "Deep-Dive" detail layer for service offerings.
   - `Highlight`: A scroll-triggered "highlighter pen" effect for key phrases.
 
@@ -39,7 +38,7 @@
 1. **Maintain Minimal Updates**: Do not rewrite stable layout structures when adding features.
 2. **Parallax Integrity**: When adding sections, ensure they respect the existing `useParallax` hook or the background aura movements.
 3. **English Only**: The interface is strictly English. Do not introduce other languages.
-4. **AI Integration**: Always use the `@google/genai` library with the model `gemini-3-flash-preview` for conversational features. Ensure `process.env.API_KEY` is used.
+
 5. **Smoothness**: Every new element should have an entry animation (e.g., `opacity` + `transform` transition).
 
 ## Key State Variables
