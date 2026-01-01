@@ -1,0 +1,57 @@
+// “联系我们”板块发送信息按钮
+<button class="animated-button">
+  <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+    ></path>
+  </svg>
+  <span class="text">Modern Button</span>
+  <span class="circle"></span>
+  <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+    ></path>
+  </svg>
+</button>
+
+//  AI聊天按钮
+<div class="loader">
+  <svg width="100" height="100" viewBox="0 0 100 100">
+    <defs>
+      <mask id="clipping">
+        <polygon points="0,0 100,0 100,100 0,100" fill="black"></polygon>
+        <polygon points="25,25 75,25 50,75" fill="white"></polygon>
+        <polygon points="50,25 75,75 25,75" fill="white"></polygon>
+        <polygon points="35,35 65,35 50,65" fill="white"></polygon>
+        <polygon points="35,35 65,35 50,65" fill="white"></polygon>
+        <polygon points="35,35 65,35 50,65" fill="white"></polygon>
+        <polygon points="35,35 65,35 50,65" fill="white"></polygon>
+      </mask>
+    </defs>
+  </svg>
+  <div class="box"></div>
+</div>
+
+// 联系我们板块按钮提示气泡
+<div class="success">
+    <div class="success__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill-rule="evenodd" fill="#393a37" d="m12 1c-6.075 0-11 4.925-11 11s4.925 11 11 11 11-4.925 11-11-4.925-11-11-11zm4.768 9.14c.0878-.1004.1546-.21726.1966-.34383.0419-.12657.0581-.26026.0477-.39319-.0105-.13293-.0475-.26242-.1087-.38085-.0613-.11844-.1456-.22342-.2481-.30879-.1024-.08536-.2209-.14938-.3484-.18828s-.2616-.0519-.3942-.03823c-.1327.01366-.2612.05372-.3782.1178-.1169.06409-.2198.15091-.3027.25537l-4.3 5.159-2.225-2.226c-.1886-.1822-.4412-.283-.7034-.2807s-.51301.1075-.69842.2929-.29058.4362-.29285.6984c-.00228.2622.09851.5148.28067.7034l3 3c.0983.0982.2159.1748.3454.2251.1295.0502.2681.0729.4069.0665.1387-.0063.2747-.0414.3991-.1032.1244-.0617.2347-.1487.3236-.2554z" clip-rule="evenodd"></path></svg>
+    </div>
+    <div class="success__title">lorem ipsum dolor sit amet</div>
+    <div class="success__close"><svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20"><path fill="#393a37" d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z"></path></svg></div>
+</div>
+
+// 下载按钮
+<button class="Btn">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    height="1em"
+    viewBox="0 0 384 512"
+    class="svgIcon"
+  >
+    <path
+      d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+    ></path>
+  </svg>
+  <span class="icon2"></span>
+</button>

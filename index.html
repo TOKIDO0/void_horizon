@@ -11,7 +11,7 @@
     <link rel="preload" href="/assets/font/hero.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="preload" href="/assets/font/hero2.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="preload" href="/assets/font/molgan.otf" as="font" type="font/otf" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <style>
         :root {
@@ -46,6 +46,8 @@
         .font-hero { font-family: 'VHHero', 'Syne', sans-serif; }
         .font-hero2 { font-family: 'VHHero2', 'Inter', sans-serif; }
         .font-molgan { font-family: 'VHMolgan', 'Syne', sans-serif; }
+        .font-elegant { font-family: 'Playfair Display', serif; font-style: italic; }
+        .font-artistic { font-family: 'Cormorant Garamond', serif; }
         
         /* 自定义光标状态 - 注意：WebP光标需要在服务器环境下才能正常显示 */
         * {
@@ -190,6 +192,310 @@
         .animate-text-bounce {
             animation: textBounce 3s ease-in-out infinite;
         }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* 板块平滑过渡 */
+        section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                rgba(0, 0, 0, 0.1),
+                transparent
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        section:first-child::before {
+            display: none;
+        }
+
+        /* 平滑背景过渡 */
+        .smooth-transition {
+            position: relative;
+        }
+
+        .smooth-transition::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(191, 255, 0, 0.3),
+                transparent
+            );
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 动画按钮样式 */
+        .animated-button {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          padding: 16px 36px;
+          border: 4px solid;
+          border-color: transparent;
+          font-size: 16px;
+          background-color: #000;
+          border-radius: 100px;
+          font-weight: 600;
+          color: #bfff00;
+          box-shadow: 0 0 0 2px #000;
+          cursor: pointer;
+          overflow: hidden;
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button svg {
+          position: absolute;
+          width: 24px;
+          fill: #bfff00;
+          z-index: 9;
+          transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button .arr-1 {
+          right: 16px;
+        }
+
+        .animated-button .arr-2 {
+          left: -25%;
+        }
+
+        .animated-button .circle {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 20px;
+          height: 20px;
+          background-color: #bfff00;
+          border-radius: 50%;
+          opacity: 0;
+          transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button .text {
+          position: relative;
+          z-index: 1;
+          transform: translateX(-12px);
+          transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button:hover {
+          box-shadow: 0 0 0 12px transparent;
+          color: #bfff00;
+          background-color: #000;
+          border-radius: 12px;
+        }
+
+        .animated-button:hover .arr-1 {
+          right: -25%;
+        }
+
+        .animated-button:hover .arr-2 {
+          left: 16px;
+        }
+
+        .animated-button:hover .text {
+          transform: translateX(12px);
+        }
+
+        .animated-button:hover svg {
+          fill: #bfff00;
+        }
+
+        .animated-button:active {
+          scale: 0.95;
+          box-shadow: 0 0 0 4px #000;
+        }
+
+        .animated-button:hover .circle {
+          width: 220px;
+          height: 220px;
+          opacity: 1;
+          background-color: #000;
+        }
+
+        /* 加载器样式 */
+        .loader {
+          --color-one: #ffbf48;
+          --color-two: #be4a1d;
+          --color-three: #ffbf4780;
+          --color-four: #bf4a1d80;
+          --color-five: #ffbf4740;
+          --time-animation: 2s;
+          --size: 0.3; /* 进一步缩小尺寸 */
+          position: relative;
+          border-radius: 50%;
+          transform: scale(var(--size));
+          box-shadow:
+            0 0 25px 0 var(--color-three),
+            0 20px 50px 0 var(--color-four);
+          animation: colorize calc(var(--time-animation) * 3) ease-in-out infinite;
+        }
+
+        .loader::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          border-top: solid 1px var(--color-one);
+          border-bottom: solid 1px var(--color-two);
+          background: linear-gradient(180deg, var(--color-five), var(--color-four));
+          box-shadow:
+            inset 0 10px 10px 0 var(--color-three),
+            inset 0 -10px 10px 0 var(--color-four);
+        }
+
+        .loader .box {
+          width: 100px;
+          height: 100px;
+          background: linear-gradient(
+            180deg,
+            var(--color-one) 30%,
+            var(--color-two) 70%
+          );
+          mask: url(#clipping);
+          -webkit-mask: url(#clipping);
+        }
+
+        .loader svg {
+          position: absolute;
+        }
+
+        .loader svg #clipping {
+          filter: contrast(15);
+          animation: roundness calc(var(--time-animation) / 2) linear infinite;
+        }
+
+        .loader svg #clipping polygon {
+          filter: blur(7px);
+        }
+
+        .loader svg #clipping polygon:nth-child(1) {
+          transform-origin: 75% 25%;
+          transform: rotate(90deg);
+        }
+
+        .loader svg #clipping polygon:nth-child(2) {
+          transform-origin: 50% 50%;
+          animation: rotation var(--time-animation) linear infinite reverse;
+        }
+
+        .loader svg #clipping polygon:nth-child(3) {
+          transform-origin: 50% 60%;
+          animation: rotation var(--time-animation) linear infinite;
+          animation-delay: calc(var(--time-animation) / -3);
+        }
+
+        .loader svg #clipping polygon:nth-child(4) {
+          transform-origin: 40% 40%;
+          animation: rotation var(--time-animation) linear infinite reverse;
+        }
+
+        .loader svg #clipping polygon:nth-child(5) {
+          transform-origin: 40% 40%;
+          animation: rotation var(--time-animation) linear infinite reverse;
+          animation-delay: calc(var(--time-animation) / -2);
+        }
+
+        .loader svg #clipping polygon:nth-child(6) {
+          transform-origin: 60% 40%;
+          animation: rotation var(--time-animation) linear infinite;
+        }
+
+        .loader svg #clipping polygon:nth-child(7) {
+          transform-origin: 60% 40%;
+          animation: rotation var(--time-animation) linear infinite;
+          animation-delay: calc(var(--time-animation) / -1.5);
+        }
+
+        @keyframes rotation {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes roundness {
+          0% {
+            filter: contrast(15);
+          }
+          20% {
+            filter: contrast(3);
+          }
+          40% {
+            filter: contrast(3);
+          }
+          60% {
+            filter: contrast(15);
+          }
+          100% {
+            filter: contrast(15);
+          }
+        }
+
+        @keyframes colorize {
+          0% {
+            filter: hue-rotate(0deg);
+          }
+          20% {
+            filter: hue-rotate(-30deg);
+          }
+          40% {
+            filter: hue-rotate(-60deg);
+          }
+          60% {
+            filter: hue-rotate(-90deg);
+          }
+          80% {
+            filter: hue-rotate(-45deg);
+          }
+          100% {
+            filter: hue-rotate(0deg);
+          }
+        }
     </style>
 <script type="importmap">
 {
@@ -198,11 +504,115 @@
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
     "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "gsap": "https://esm.sh/gsap@^3.12.2",
+    "framer-motion": "https://esm.sh/framer-motion@^10.16.4"
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+<script src="https://esm.sh/gsap@^3.12.2"></script>
+    <script src="https://esm.sh/gsap@^3.12.2/ScrollTrigger"></script>
+    <script>
+        // GSAP 文字入场动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 注册 ScrollTrigger 插件
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // 文字元素入场动画
+            gsap.utils.toArray('h1, h2, h3, .text-animate').forEach(element => {
+                gsap.fromTo(element, 
+                    {
+                        opacity: 0,
+                        y: 50,
+                        skewY: 3
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        skewY: 0,
+                        duration: 1.2,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 80%",
+                            end: "bottom 20%",
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            });
+            
+            // 段落文字动画
+            gsap.utils.toArray('p, .description').forEach(element => {
+                gsap.fromTo(element,
+                    {
+                        opacity: 0,
+                        y: 30,
+                        rotationX: 15
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        rotationX: 0,
+                        duration: 1,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 85%",
+                            end: "bottom 15%",
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            });
+            
+            // AI 聊天按钮入场动画
+            const aiChatButton = document.querySelector('.loader');
+            if (aiChatButton) {
+                gsap.fromTo(aiChatButton,
+                    {
+                        x: 100,
+                        opacity: 0,
+                        rotation: 180
+                    },
+                    {
+                        x: 0,
+                        opacity: 1,
+                        rotation: 0,
+                        duration: 1.5,
+                        ease: "back.out(1.7)",
+                        delay: 1
+                    }
+                );
+            }
+            
+            // 卡片依次入场动画
+            gsap.utils.toArray('.workflow-card').forEach((card, index) => {
+                gsap.fromTo(card,
+                    {
+                        opacity: 0,
+                        scale: 0.8,
+                        rotationY: 45
+                    },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        rotationY: 0,
+                        duration: 0.8,
+                        ease: "power2.out",
+                        delay: index * 0.2,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 80%",
+                            end: "bottom 20%",
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            });
+        });
+    </script>
+    <link rel="stylesheet" href="/index.css">
 </head>
 <body>
     <div class="vibrant-bg" id="bg-parallax">
